@@ -10,7 +10,7 @@ export const listApplications = async (req: Request, res: Response): Promise<voi
     let whereClause = {};
 
     if (userId && userType) {
-      if (userType === "tenants") {
+      if (userType === "tenant") {
         whereClause = { tenantCognitoId: String(userId) };
       } else if (userType === "manager") {
         whereClause = {
@@ -40,7 +40,6 @@ export const listApplications = async (req: Request, res: Response): Promise<voi
       while (nextPaymentDate <= today) {
         nextPaymentDate.setMonth(nextPaymentDate.getMonth() + 1);
       }
-
       return nextPaymentDate;
     }
 
@@ -64,7 +63,10 @@ export const listApplications = async (req: Request, res: Response): Promise<voi
           },
           manager: app.property.manager,
           lease: lease
-            ? { ...lease, nextPaymentDate: calculateNextPaymentDate(lease.startDate) }
+            ? {
+                ...lease,
+                nextPaymentDate: calculateNextPaymentDate(lease.startDate),
+              }
             : null,
         };
       })
